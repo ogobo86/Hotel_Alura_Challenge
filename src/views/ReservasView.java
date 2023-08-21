@@ -15,6 +15,7 @@ import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.text.Format;
+import java.util.Calendar;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -264,7 +265,7 @@ public class ReservasView extends JFrame {
 		txtFechaSalida.setFont(new Font("Roboto", Font.PLAIN, 18));
 		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				//Activa el evento, después del usuario seleccionar las fechas se debe calcular el valor de la reserva
+				assessedValue (txtFechaEntrada, txtFechaSalida);
 			}
 		});
 		txtFechaSalida.setDateFormatString("yyyy-MM-dd");
@@ -297,9 +298,9 @@ public class ReservasView extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
-					
 					RegistroHuesped registro = new RegistroHuesped();
 					registro.setVisible(true);
+					
 				} else {
 					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
 				}
@@ -313,6 +314,27 @@ public class ReservasView extends JFrame {
 
 
 	}
+	
+	private void assessedValue (JDateChooser checkIn, JDateChooser checkOut){
+	    	if (checkIn.getDate() != null && checkOut.getDate() != null) {
+	    		Calendar begin = checkIn.getCalendar();
+	    		Calendar out = checkOut.getCalendar();
+	    		
+	    		int days = -1;
+	    		int nigth = 40; //Cost per nigth
+	    		int cost;
+	    		
+	    		while (begin.before(out) | begin.equals(out)) {
+	    			days++;
+	    			begin.add(Calendar.DATE,  1);
+	    		}
+	    		
+	    		cost = days * nigth;
+	    		String costS = Integer.toString(cost);
+	    		txtValor.setText("El valor es: " + costS + ", por " + days + " noche(s)");
+	    	}
+	   }
+		   
 		
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
@@ -324,5 +346,6 @@ public class ReservasView extends JFrame {
 	        int x = evt.getXOnScreen();
 	        int y = evt.getYOnScreen();
 	        this.setLocation(x - xMouse, y - yMouse);
-}
+	    }
+	    
 }
