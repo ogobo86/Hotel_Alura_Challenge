@@ -11,6 +11,9 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
+
+import model.Reserva;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -39,6 +42,8 @@ public class ReservasView extends JFrame {
 	private JLabel labelExit;
 	private JLabel labelAtras;
 
+	
+	//private ReservasController reservasController;
 	/**
 	 * Launch the application.
 	 */
@@ -60,6 +65,8 @@ public class ReservasView extends JFrame {
 	 */
 	public ReservasView() {
 		super("Reserva");
+		
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/imagenes/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 910, 560);
@@ -297,13 +304,7 @@ public class ReservasView extends JFrame {
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
-					RegistroHuesped registro = new RegistroHuesped();
-					registro.setVisible(true);
-					
-				} else {
-					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
-				}
+				guardarReserva();
 			}						
 		});
 		btnsiguiente.setLayout(null);
@@ -315,10 +316,21 @@ public class ReservasView extends JFrame {
 
 	}
 	
-	private void assessedValue (JDateChooser checkIn, JDateChooser checkOut){
-	    	if (checkIn.getDate() != null && checkOut.getDate() != null) {
-	    		Calendar begin = checkIn.getCalendar();
-	    		Calendar out = checkOut.getCalendar();
+	private void guardarReserva() {
+		String FechaEntrada = ((JTextField)txtFechaEntrada.getDateEditor().getUiComponent()).getText();
+		String FechaSalida = ((JTextField)txtFechaSalida.getDateEditor().getUiComponent()).getText();
+		Reserva nuevaReserva = new Reserva(java.sql.Date.valueOf(FechaEntrada),java.sql.Date.valueOf(FechaSalida),txtValor.getText(),txtFormaPago.getSelectedItem().toString());
+		//reservasController.guardar(nuevaReserva);
+		RegistroHuesped huesped = new RegistroHuesped(nuevaReserva.getId());
+		huesped.setVisible(true);
+		
+	}
+	
+	
+	private void assessedValue (JDateChooser fechaEntrada, JDateChooser fechaSalida){
+	    	if (fechaEntrada.getDate() != null && fechaSalida.getDate() != null) {
+	    		Calendar begin = fechaEntrada.getCalendar();
+	    		Calendar out = fechaSalida.getCalendar();
 	    		
 	    		int days = -1;
 	    		int nigth = 40; //Cost per nigth
@@ -328,7 +340,7 @@ public class ReservasView extends JFrame {
 	    			days++;
 	    			begin.add(Calendar.DATE,  1);
 	    		}
-	    		
+	   		
 	    		cost = days * nigth;
 	    		String costS = Integer.toString(cost);
 	    		txtValor.setText("El valor es: " + costS + ", por " + days + " noche(s)");
