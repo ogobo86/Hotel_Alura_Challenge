@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import model.Huesped;
@@ -83,7 +83,7 @@ public class HuespedDAO {
 		List <Huesped> resultado = new ArrayList<>();
 		try {
 			final PreparedStatement statement = con.prepareStatement(
-					"SELECT h.id, h.nombre, h.fechaNacimiento, h.nacionalidad, h.telefono, h.idReserva FROM huesped AS h");
+					"SELECT h.id, h.nombre, h.fecha_nacimiento, h.nacionalidad, h.telefono, h.idReserva FROM huesped AS h");
 			try(statement){
 				statement.execute();
 				final ResultSet result = statement.getResultSet();
@@ -93,7 +93,7 @@ public class HuespedDAO {
 						result.getInt("h.id"),
 						result.getString("h.nombre"),
 						result.getString("h.apellido"),
-						result.getDate("h.fechaNacimiento"),
+						result.getDate("h.fecha_nacimiento"),
 						result.getString("h.nacionalidad"),
 						result.getString("h.telefono"),
 						result.getInt("h.idReserva")));
@@ -107,14 +107,50 @@ public class HuespedDAO {
 	}
 
 	public int eliminar(Integer id) {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			final PreparedStatement statement = con.prepareStatement("DELETE FROM huesped WHERE id = ?");
+			
+			try(statement){
+				statement.setInt(1, id);
+				statement.execute();
+				
+				int updateCount = statement.getUpdateCount();
+				
+				return updateCount;
+			}
+		}catch (SQLException e) {
+			throw new RuntimeException (e);
+		}
+		
 	}
 
-	public int editar(Integer id, String nombre, String apellido, Date fechaNacimiento, String nacionalidad,
+	public int editar( String nombre, String apellido, Date fechaNacimiento, String nacionalidad,
 			String telefono, Integer idReserva) {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			PreparedStatement statement = con.prepareStatement("UPDATE huesped SET "
+					+ "nombre = ?, "
+					+ "apelllido = ?, "
+					+ "fecha_nacimiento = ?, "
+					+ "nacionalidad = ?, "
+					+ "telefono = ?, "
+					+ "idReserva = ? "
+					+ "WHERE id = ?;");
+			try(statement){
+				
+				statement.setString(1, nombre);
+				statement.setString(2, apellido);
+				statement.setDate(3, fechaNacimiento);
+				statement.setString(4, nacionalidad);
+				statement.setString(5, telefono);
+				statement.setInt(6, idReserva);
+				
+				statement.execute();
+				int reservaCount = statement.getUpdateCount();
+				return reservaCount;
+			}
+		}catch (SQLException e) {
+			throw new RuntimeException (e);
+		}
 	}
 	
 }

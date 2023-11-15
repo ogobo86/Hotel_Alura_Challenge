@@ -28,8 +28,8 @@ public class HuespedController {
 		huespedDAO.guardar(huesped);
 	}
 	
-	public int modificar (Integer id, String nombre, String apellido, Date fechaNacimiento, String nacionalidad, String telefono, Integer idReserva) {
-		return huespedDAO.editar(id,nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva);
+	public int modificar ( String nombre, String apellido, Date fechaNacimiento, String nacionalidad, String telefono, Integer idReserva) {
+		return huespedDAO.editar(nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva);
 	}
 	
 	public int eliminar (Integer id) {

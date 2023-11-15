@@ -1,6 +1,6 @@
 package model;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Reserva {
 
@@ -24,5 +24,46 @@ public class Reserva {
 			this.valor = valor;
 			this.formaDePago = formaDePago;
 		}
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
+
+		public Date getFechaEntrada() {
+			return fechaEntrada;
+		}
+
+		public void setFechaEntrada(Date fechaEntrada) {
+			this.fechaEntrada = fechaEntrada;
+		}
+
+		public Date getFechaSalida() {
+			return fechaSalida;
+		}
+
+		public void setFechaSalida(Date fechaSalida) {
+			this.fechaSalida = fechaSalida;
+		}
+
+		public String getValor() {
+			return valor;
+		}
+
+		public void setValor(String valor) {
+			this.valor = valor;
+		}
+
+		public String getFormaDePago() {
+			return formaDePago;
+		}
+
+		public void setFormaDePago(String formaDePago) {
+			this.formaDePago = formaDePago;
+		}
+		
 		
 }
