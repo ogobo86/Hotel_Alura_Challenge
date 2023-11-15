@@ -65,5 +65,16 @@ public class Reserva {
 			this.formaDePago = formaDePago;
 		}
 		
+		public boolean getNull() {
+		    boolean result = false;
+		    if (getFechaEntrada().equals(null)
+		        || getFechaSalida().equals(null)
+		        || getFormaDePago().equals(null)
+		        || getFormaDePago().isEmpty()
+		        || getValor().equals(null)) {
+		      result = true;
+		    }
+		    return result;
+		  }
 		
 }
