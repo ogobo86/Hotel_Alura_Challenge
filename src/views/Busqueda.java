@@ -13,6 +13,8 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -121,6 +123,8 @@ public class Busqueda extends JFrame {
 		panel.addTab("Huéspedes", new ImageIcon(Busqueda.class.getResource("/imagenes/pessoas.png")), scroll_tableHuespedes, null);
 		scroll_tableHuespedes.setVisible(true);
 		
+		//  cargar()
+		
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Busqueda.class.getResource("/imagenes/Ha-100px.png")));
 		lblNewLabel_2.setBounds(56, 51, 104, 107);
@@ -216,7 +220,21 @@ public class Busqueda extends JFrame {
 		btnbuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				if (txtBuscar.getText()!= "") {
+					try {
+						Integer id = Integer.valueOf(txtBuscar.getText());
+						limpiarTabla();
+						cargarTablaId(id);
+					}catch (NumberFormatException e) {
+						JOptionPane.showMessageDialog(null, "Ingresa un id valido");
+						limpiarTabla();
+						cargarTabla();
+					}
+				}else {
+					JOptionPane.showMessageDialog(null, "Debes llenar los campos");
+					limpiarTabla();
+					cargarTabla();
+				}
 			}
 		});
 		btnbuscar.setLayout(null);
@@ -233,11 +251,23 @@ public class Busqueda extends JFrame {
 		lblBuscar.setFont(new Font("Roboto", Font.PLAIN, 18));
 		
 		JPanel btnEditar = new JPanel();
+		btnEditar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int confirm = JOptionPane.showConfirmDialog(btnEditar, "Desea modificar", "Editar Alerta", 0, 2, null);
+				if (confirm == 0 ) {
+					editar();
+					limpiarTabla();
+					cargarTabla();
+				}return; 
+			}
+		});
 		btnEditar.setLayout(null);
 		btnEditar.setBackground(new Color(12, 138, 199));
 		btnEditar.setBounds(635, 508, 122, 35);
 		btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		contentPane.add(btnEditar);
+		
 		
 		JLabel lblEditar = new JLabel("EDITAR");
 		lblEditar.setHorizontalAlignment(SwingConstants.CENTER);
@@ -247,6 +277,18 @@ public class Busqueda extends JFrame {
 		btnEditar.add(lblEditar);
 		
 		JPanel btnEliminar = new JPanel();
+		btnEliminar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int confirm = JOptionPane.showConfirmDialog(btnEliminar, "Desea Eliminar", "Eliminar Alerta", 0, 2, null);
+			        if (confirm == 0) {
+			          eliminar();
+			          limpiarTabla();
+			          cargarTabla();
+			        }
+			        return;
+			}
+		});
 		btnEliminar.setLayout(null);
 		btnEliminar.setBackground(new Color(12, 138, 199));
 		btnEliminar.setBounds(767, 508, 122, 35);

@@ -60,7 +60,7 @@ public class HuespedDAO {
 			try (statement){
 				statement.setString(1,huesped.getNombre());
 				statement.setString(2,huesped.getApellido());
-				statement.setDate(3, huesped.getFechaNacimiento());
+				statement.setDate(3, (java.sql.Date) huesped.getFechaNacimiento());
 				statement.setString(4, huesped.getNacionalidad());
 				statement.setString(5,huesped.getTelefono());
 				statement.setInt(6, huesped.getIdReserva());
@@ -139,7 +139,7 @@ public class HuespedDAO {
 				
 				statement.setString(1, nombre);
 				statement.setString(2, apellido);
-				statement.setDate(3, fechaNacimiento);
+				statement.setDate(3, (java.sql.Date) fechaNacimiento);
 				statement.setString(4, nacionalidad);
 				statement.setString(5, telefono);
 				statement.setInt(6, idReserva);

@@ -28,8 +28,8 @@ public class ReservaDAO {
 					+ "forma_de_pago = ? "
 					+ "WHERE id = ?;");
 			try (statement){
-				statement.setDate(1, fechaEntrada);
-				statement.setDate(2, fechaSalida);
+				statement.setDate(1, (java.sql.Date) fechaEntrada);
+				statement.setDate(2, (java.sql.Date) fechaSalida);
 				statement.setInt(3, valor);
 				statement.setString(4, formaDePago);
 				statement.setInt(5, id);
@@ -52,8 +52,8 @@ public class ReservaDAO {
 			final PreparedStatement statement = con.prepareStatement("INSERT INTO reserva fecha_entrada, fecha_salida, valor, forma_pago"
 					+ " VALUES = (?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
 			try(statement){
-				statement.setDate(1, reserva.getFechaEntrada());
-				statement.setDate(2, reserva.getFechaSalida());
+				statement.setDate(1, (java.sql.Date) reserva.getFechaEntrada());
+				statement.setDate(2, (java.sql.Date) reserva.getFechaSalida());
 				statement.setString(3, reserva.getValor());
 				statement.setString(4, reserva.getFormaDePago());
 				statement.execute();
