@@ -6,6 +6,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import controller.HuespedController;
+import controller.ReservaController;
+import model.Huesped;
+import model.Reserva;
+
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -18,6 +24,7 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Optional;
 import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
 import java.awt.Toolkit;
@@ -225,7 +232,7 @@ public class Busqueda extends JFrame {
 						Integer id = Integer.valueOf(txtBuscar.getText());
 						limpiarTabla();
 						cargarTablaId(id);
-					}catch (NumberFormatException e) {
+					}catch (NumberFormatException ex) {
 						JOptionPane.showMessageDialog(null, "Ingresa un id valido");
 						limpiarTabla();
 						cargarTabla();
@@ -314,5 +321,91 @@ public class Busqueda extends JFrame {
 	        int x = evt.getXOnScreen();
 	        int y = evt.getYOnScreen();
 	        this.setLocation(x - xMouse, y - yMouse);
-}
+	    }
+	    
+	    private void cargarTabla() {
+	    	HuespedController huespedController = new HuespedController();
+	    	ReservaController reservaController = new ReservaController();
+	    	
+	    	List <Reserva> reserva = reservaController.listar();
+	    	reserva.forEach(reservas -> modelo.addRow(new Object [] {
+	    			reservas.getId(),
+	    			reservas.getFechaEntrada(),
+	    			reservas.getFechaSalida(),
+	    			reservas.getValor(),
+	    			reservas.getFormaDePago()
+	    			
+	    	}));
+	    	
+	    	List<Huesped> huesped = huespedController.listar();
+	    	huesped.forEach(huespedes -> modeloHuesped.addRow(new Object[] {
+	    			huespedes.getId(),
+	    			huespedes.getNombre(),
+	    			huespedes.getApellido(),
+	    			huespedes.getFechaNacimiento(),
+	    			huespedes.getNacionalidad(),
+	    			huespedes.getTelefono(),
+	    			huespedes.getIdReserva()
+	    	}));
+	    }
+	    
+	    private boolean tieneFilaElegidaReserva() {
+	    	return tbReservas.getSelectedRowCount()== 0 || tbReservas.getSelectedColumnCount() == 0;
+	    }
+	    
+	    private boolean tieneFilaElegidaHuesped () {
+	    	return tbHuespedes.getSelectedRowCount() == 0 || tbHuespedes.getSelectedColumnCount() == 0;
+	    }
+	    
+	    public void cargarTablaId (int id) {
+	    	HuespedController huespedController = new HuespedController();
+	    	ReservaController reservaController = new ReservaController();
+	    	
+	    	List<Huesped> huesped = huespedController.buscarIdReserva(id);
+	    	huesped.forEach(huespedes -> modeloHuesped.addRow(new Object[] {
+	    			huespedes.getId(),
+	    			huespedes.getNombre(),
+	    			huespedes.getApellido(),
+	    			huespedes.getFechaNacimiento(),
+	    			huespedes.getNacionalidad(),
+	    			huespedes.getTelefono(),
+	    			huespedes.getIdReserva()
+	    	}));
+	    	
+	    	List <Reserva> reserva = reservaController.buscarId(id);
+	    	reserva.forEach(reservas -> modelo.addRow(new Object [] {
+	    			reservas.getId(),
+	    			reservas.getFechaEntrada(),
+	    			reservas.getFechaSalida(),
+	    			reservas.getValor(),
+	    			reservas.getFormaDePago()
+	    	}));	
+	    }
+	    
+	    private void limpiarTabla () {
+	    	modelo.getDataVector().clear();
+	    	modeloHuesped.getDataVector().clear();
+	    }
+	    
+	    private void eliminar() {
+	    	HuespedController huespedController = new HuespedController();
+	    	ReservaController reservaController = new ReservaController();
+	    	
+	    	try {
+	    		if (!tieneFilaElegidaHuesped()) {
+	    			Optional.ofNullable(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), tbHuespedes.getSelectedColumn()))
+	    			.ifPresentOrElse(fila -> {
+	    				Integer id = Integer.valueOf(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),0).toString());
+	    				int filasModificadas = huespedController.eliminar(id);
+	    				modeloHuesped.removeRow(tbHuespedes.getSelectedRow());
+	    				 JOptionPane.showMessageDialog(null, String.format("%d Eliminado de manera satisfactoria", filasModificadas));
+	    				}, () -> JOptionPane.showMessageDialog(null, "Continuar"));
+	    		} if (!tieneFilaElegidaReserva()) {
+	    			
+	    		}
+	    		
+	    	}catch (Exception e) {
+	    		JOptionPane.showMessageDialog(null, "Ocurrio un Error favor de intentar de nuevo");
+	    	}
+	    }
 }
