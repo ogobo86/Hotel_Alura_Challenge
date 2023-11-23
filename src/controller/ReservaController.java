@@ -28,7 +28,7 @@ public class ReservaController {
 		reservaDAO.guardar(reserva);
 	}
 	
-	public int modificar(Integer id, Date fechaEntrada, Date fechaSalida, String valor, String formaPago ) {
+	public int modificar(Integer id, Date fechaEntrada, Date fechaSalida, Integer valor, String formaPago ) {
 		return reservaDAO.editar(id, fechaEntrada, fechaSalida, 0, formaPago);
 	}
 	public int eliminar(Integer id) {
