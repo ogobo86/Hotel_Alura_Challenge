@@ -45,8 +45,7 @@ public class Huesped {
 	    this.telefono = telefono;
 	  }
 
-
-	  public int getId() {
+	public int getId() {
 	    return id;
 	  }
 

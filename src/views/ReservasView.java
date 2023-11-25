@@ -12,6 +12,7 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
+import controller.ReservaController;
 import model.Reserva;
 
 import java.awt.Font;
@@ -19,6 +20,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.text.Format;
 import java.util.Calendar;
+import java.util.Date;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -304,7 +306,25 @@ public class ReservasView extends JFrame {
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				guardarReserva();
+				
+				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null || getValor() != 0) {
+					
+					Reserva reserva = new Reserva (new Date(txtFechaEntrada.getDate().getTime()),
+							new Date(txtFechaSalida.getDate().getTime()), getValor(), txtFormaPago.getSelectedItem().toString());
+					try {
+						ReservaController reservaController = new ReservaController();
+						reservaController.guardar(reserva);
+						
+						RegistroHuesped registro = new RegistroHuesped (reserva);
+						
+						registro.setVisible(true);
+						dispose();
+					}catch (Exception error) {
+						JOptionPane.showMessageDialog(null, "Error al agregar");
+					}
+				}else {
+					JOptionPane.showMessageDialog(null, "Debe de llenbar los campos");
+				}
 			}						
 		});
 		btnsiguiente.setLayout(null);
@@ -314,16 +334,6 @@ public class ReservasView extends JFrame {
 		btnsiguiente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
 
-	}
-	
-	private void guardarReserva() {
-		String FechaEntrada = ((JTextField)txtFechaEntrada.getDateEditor().getUiComponent()).getText();
-		String FechaSalida = ((JTextField)txtFechaSalida.getDateEditor().getUiComponent()).getText();
-		Reserva nuevaReserva = new Reserva(java.sql.Date.valueOf(FechaEntrada),java.sql.Date.valueOf(FechaSalida),txtValor.getText(),txtFormaPago.getSelectedItem().toString());
-		//reservasController.guardar(nuevaReserva);
-		RegistroHuesped huesped = new RegistroHuesped(nuevaReserva.getId());
-		huesped.setVisible(true);
-		
 	}
 	
 	
